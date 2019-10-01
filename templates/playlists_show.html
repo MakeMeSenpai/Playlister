@@ -1,4 +1,13 @@
+<a href='/'>Back to Home</a>
+
 {% extends 'base.html' %}
+
+<h1>{{playlist.title}}</h1>
+{% if playlist.created_at %}
+<p class='text-muted'>Created on {{ playlist.created_at.strftime('%A, %d %B, %Y') }}
+    at {{ playlist.created_at.strftime('%I:%M %p') }}</p>
+{% endif %}
+
 
 {% block content %}
 <a href='/'>Back to Home</a>
@@ -19,3 +28,15 @@
     </div>
 </div>
 {% endblock %}
+
+{% include 'partials/comment_form.html' %}
+
+    <hr>
+
+    <!-- Show Comments -->
+    {% for comment in comments %}
+        {% include 'partials/comment.html' %}
+    {% endfor %}
+
+  </div>
+</div>
