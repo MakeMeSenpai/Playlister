@@ -35,8 +35,7 @@ def playlists_update(playlist_id):
     updated_playlist = {
         'title': request.form.get('title'),
         'description': request.form.get('description'),
-        'videos': request.form.get('videos').split(),
-        'rating': request.form.get('request')
+        'videos': request.form.get('videos').split()
     }
     playlists.update_one(
         {'_id': ObjectId(playlist_id)},
