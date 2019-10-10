@@ -1,8 +1,8 @@
-# tests.py
 from unittest import TestCase, main as unittest_main, mock
 from bson.objectid import ObjectId
 from app import app
 
+#creates mock data for our tests
 sample_playlist_id = ObjectId('5d55cffc4a3d4031f42827a3')
 sample_playlist = {
     'title': 'Cat Videos',
@@ -29,7 +29,7 @@ class PlaylistsTests(TestCase):
 
         # Show Flask errors that happen during tests
         app.config['TESTING'] = True
-    
+
     def test_index(self):
         """Test the playlists homepage."""
         result = self.client.get('/')
@@ -41,6 +41,15 @@ class PlaylistsTests(TestCase):
         result = self.client.get('/playlists/new')
         self.assertEqual(result.status, '200 OK')
         self.assertIn(b'New Playlist', result.data)
+    
+    @mock.patch('pymongo.collection.Collection.find_one')
+    def test_show_playlist(self, mock_find):
+        """Test showing a single playlist."""
+        mock_find.return_value = sample_playlist
+
+        result = self.client.get(f'/playlists/{sample_playlist_id}')
+        self.assertEqual(result.status, '200 OK')
+        self.assertIn(b'Cat Videos', result.data)
     
     @mock.patch('pymongo.collection.Collection.find_one')
     def test_edit_playlist(self, mock_find):
@@ -74,8 +83,5 @@ class PlaylistsTests(TestCase):
         self.assertEqual(result.status, '302 FOUND')
         mock_delete.assert_called_with({'_id': sample_playlist_id})
 
-
 if __name__ == '__main__':
     unittest_main()
-
-    
